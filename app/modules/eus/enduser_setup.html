@@ -166,7 +166,8 @@
 				<h1>Success!</h1>
 				<div id=i>
 					<h3>Your device has successfully connected to the Wi-Fi network.<br /><br/>You may now close this web page.</h3>
-				</div>
+				</div><br /><br />
+				<h3 id=ipaddr></h3>
 			</div>
 			<div id=f3>
 				<h2>Trying...</h2>
@@ -211,6 +212,7 @@
 				}
 
 				$('#deviceId').innerText = "Device: " + d.deviceid;
+				$('#ipaddr').innerText = "IP: " + d.ip;
 
 				var c = d.pairing;
 
