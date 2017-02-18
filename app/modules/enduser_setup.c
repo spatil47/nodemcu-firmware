@@ -50,7 +50,7 @@
 #include "task/task.h"
 
 /* Set this to 1 to generate debug messages. Uses debug callback provided by Lua. Example: enduser_setup.start(successFn, print, print) */ 
-#define ENDUSER_SETUP_DEBUG_ENABLE 0
+#define ENDUSER_SETUP_DEBUG_ENABLE 1
 
 /* Set this to 1 to output the contents of HTTP requests when debugging. Useful if you need it, but can get pretty noisy */
 #define ENDUSER_SETUP_DEBUG_SHOW_HTTP_REQUEST 0
@@ -874,7 +874,13 @@ static void enduser_setup_serve_status_as_json (struct tcp_pcb *http_client)
   uint8_t curr_status = state->lastStationStatus > 0 ? state->lastStationStatus : wifi_station_get_connect_status ();  
 
   char json_payload[64];
-  c_sprintf(json_payload, "{\"deviceid\":\"%06X\", \"status\":%d}", system_get_chip_id(), curr_status);
+
+  struct ip_info ip_info;
+
+  wifi_get_ip_info(STATION_IF , &ip_info);
+
+  c_sprintf(json_payload, "{\"deviceid\":\"%06X\", \"status\":%d, \"ip\":\"%d.%d.%d.%d\"}", system_get_chip_id(), curr_status, IP2STR(&ip_info.ip.addr));
+  //c_sprintf(json_payload, "{\"deviceid\":\"%06X\", \"status\":%d}", system_get_chip_id(), curr_status);
      
   const char fmt[] =
     "HTTP/1.1 200 OK\r\n"
